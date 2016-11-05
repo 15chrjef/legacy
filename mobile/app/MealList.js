@@ -27,6 +27,7 @@ export default class MealList extends React.Component {
     this.postMeal = this.postMeal.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
     this.clearMeals = this.clearMeals.bind(this);
+    this.CalorieCounter = this.CalorieCounter.bind(this)
     this.state = {
       animating: true,
       //Drawer Related States
