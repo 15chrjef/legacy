@@ -27,7 +27,10 @@ export default class MealList extends React.Component {
     this.postMeal = this.postMeal.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
     this.clearMeals = this.clearMeals.bind(this);
-    this.CalorieCounter = this.CalorieCounter.bind(this)
+    this.CalorieCounter = this.CalorieCounter.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.updateMeals = this.updateMeals.bind(this);
     this.state = {
       animating: true,
       //Drawer Related States
@@ -43,42 +46,40 @@ export default class MealList extends React.Component {
 
   // displays calories, switches to red if over recommended calories
   CalorieCounter(){
+    var self = this;
     var calor = 0;
-    this.props.getMealList().forEach((meal) => {
+    self.props.getMealList().forEach((meal) => {
       calor += meal.recipe.calories
     })
-    AsyncStorage.getItem(this.props.userId, (err,value) => {
+    AsyncStorage.getItem(self.props.userId, (err,value) => {
       if(value !== null){
-        console.log(value, 'aysnch function value')
         global._count = JSON.parse(value);
       }
       global._cals = ('Weekly Calories Consumed: ' + Math.round(calor) + '/' + (global._count || 14000));
     
       if(calor > (global._globalCaloriesCount || 14000)){
-        this.setState({
+        self.setState({
           view: {
             backgroundColor: 'red',
             borderRadius: 20,
             width: width * .8,
             height: 50,
             //for ios phone, overflow needs to be set as 'hidden'
-            overflow: (Platform.OS === 'ios' ) ? 'hidden' : undefined
           },
         })
       } else{
-        this.setState({
+        self.setState({
           view: {
             backgroundColor: '#1e90ff',
             borderRadius: 20,
             width: width * .8,
             height: 50,
             //
-            overflow: (Platform.OS === 'ios' ) ? 'hidden' : undefined
           },
         })
       }
-      if(this.state.animating){
-        this.setToggleTimeout();
+      if(self.state.animating){
+        self.setToggleTimeout();
       }
     })
   } // end CalorieCounter
@@ -133,7 +134,7 @@ export default class MealList extends React.Component {
         recipe,
         nutrients,
         mealId,
-        postMeal: this.postMeal.bind(this),
+        postMeal: this.postMeal,
         text: 'Remove',
       },
     });
@@ -158,7 +159,7 @@ export default class MealList extends React.Component {
     if(!this.state.animating){
       this.setToggleTimeout()
     }
-    this.getData(this.CalorieCounter.bind(this));
+    this.getData(this.CalorieCounter);
   } // end componentWillMount
 
   render() {
@@ -167,7 +168,7 @@ export default class MealList extends React.Component {
         ref="drawer"
         type="overlay"
         content={
-          <ControlPanel userId={this.props.userId} closeDrawer={this.closeDrawer.bind(this)} updateCalories={this.CalorieCounter.bind(this)}/>
+          <ControlPanel userId={this.props.userId} closeDrawer={this.closeDrawer} updateCalories={this.CalorieCounter}/>
         }
         //need to think what is the best way to close it;
         acceptTap={true}
@@ -192,7 +193,7 @@ export default class MealList extends React.Component {
         >
           <View style={styles.container}>
             <HeadBuffer />
-            <LogoDisplay openDrawer={this.openDrawer.bind(this)}/>
+            <LogoDisplay openDrawer={this.openDrawer}/>
             <Text style={styles.Title}>Weekly Meals!</Text>
             <ActivityIndicator
               animating={this.state.animating}
@@ -214,7 +215,7 @@ export default class MealList extends React.Component {
                     recipe={meal.recipe}
                     showInfo={this.gotoNext}
                     token={this.props.getToken()}
-                    updateMeals={this.updateMeals.bind(this)}
+                    updateMeals={this.updateMeals}
                     key={i}
                     mealId={meal._id} // eslint-disable-line no-underscore-dangle
                     textStyle={{color: 'white',fontWeight: 'bold', fontSize: 20}}

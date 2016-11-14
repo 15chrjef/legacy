@@ -14,6 +14,7 @@ export default class ControlPanel extends React.Component {
     this.Calculate = this.Calculate.bind(this);
     this.onFemaleSelect = this.onFemaleSelect.bind(this);
     this.onMaleSelect = this.onMaleSelect.bind(this);
+    this.changeGlobalCalories = this.changeGlobalCalories.bind(this);
     this.state={
       calories: '',
       age: '',
@@ -50,9 +51,10 @@ export default class ControlPanel extends React.Component {
 
   // for setting/updating recommended weekly calories consumption
   changeGlobalCalories() {
-    global._globalCaloriesCount = parseInt(this.state.calories);
-    AsyncStorage.setItem(this.props.userId, JSON.stringify(global._globalCaloriesCount),() => {
-      this.props.updateCalories();
+    var self = this;
+    global._globalCaloriesCount = parseInt(self.state.calories);
+    AsyncStorage.setItem(self.props.userId, JSON.stringify(global._globalCaloriesCount),() => {
+      self.props.updateCalories();
     })
   } // end changeGlobalCalories
 
