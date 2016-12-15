@@ -6,7 +6,7 @@
 
   - __Product Owner__: Sherman Chen
   - __Scrum Master__: Tim Garibaldi
-  - __Development Team Members__: Jeff Christian, Sheng Yang
+  - Engineering Team Members__: Jeff Christian II, Sheng Yang
 
 ## Table of Contents
 
